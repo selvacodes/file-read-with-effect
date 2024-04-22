@@ -1,0 +1,19 @@
+{
+  "name": "file-read-with-effect",
+  "module": "src/program.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run src/program.ts",
+    "format": "prettier src/** --write"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.2.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "effect": "^3.0.3"
+  }
+}
