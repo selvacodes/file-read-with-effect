@@ -1,5 +1,19 @@
-import { readFileE, FileService, NeededContext, File2Context, FileTag } from './file_reader'
-import { Effect as E, pipe, Match as M, Context } from 'effect'
+import {
+  readFileE,
+  File2Context,
+  File2Tag,
+  gImpl,
+  gImpl2,
+  File2Service,
+} from './file_reader'
+import {
+  Effect as E,
+  pipe,
+  Match as M,
+  Context,
+  Option as O,
+  Effect,
+} from 'effect'
 
 const isEmpty = (x: string) => x != ''
 
@@ -22,10 +36,14 @@ const program = pipe(
   )
 )
 
+let a = pipe(
+  E.serviceOption(File2Tag),
+  E.map((x) => O.getOrThrow(x))
+)
 const p3 = pipe(
   E.Do,
-  // E.bind('file', () => E.succeed(Context.get(File2Context,FileTag))),
-  E.bind('file', () => FileService),
+  // E.bind('file', () => a),
+  E.bind('file', () => E.succeed(Context.get(File2Context, File2Tag))),
   E.bind('rootFileContents', ({ file }) => {
     return file.readFileE(rootFilePath)
   }),
@@ -43,9 +61,8 @@ const p3 = pipe(
     })
   })
 )
-
-const p4 = E.gen(function* (_) {
-  let file = yield* _(FileService)
+const p4 = Effect.gen(function* (_) {
+  let file = yield* _(E.succeed(File2Service))
   let rootFileContents = yield* _(file.readFileE(rootFilePath))
   let filesList = splitWithNewLine(rootFileContents)
     .filter(isEmpty)
@@ -57,8 +74,7 @@ const p4 = E.gen(function* (_) {
   })
   return toReturn
 })
-
-const runnable = E.provide(p3, FileService.Live)
+const runnable = E.provideService(File2Tag, gImpl2)(p3)
 
 const result = await E.runPromise(runnable)
 console.log('result', result)

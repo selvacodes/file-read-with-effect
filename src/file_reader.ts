@@ -42,19 +42,12 @@ export class FileService extends Context.Tag('File')<
 }
 
 // To create context -> Service type and unique identifier is needed
-export let FileTag = Context.GenericTag<FileServiceType>("File2")
-export let File2Context = Context.make(FileTag,gImpl)
+// export let FileTag = Context.GenericTag<FileServiceType>("File2")
+// export let File2Context = Context.make(FileTag,gImpl)
+//
+// let File3Tag = Context.GenericTag<typeof gImplWrite>("File3")
+// let File3Service = Context.make(File3Tag,gImplWrite)
+//
+// let mergedContext = Context.merge(File2Context)(File3Service)
+// export let NeededContext = Context.get(mergedContext,FileTag)
 
-let File3Tag = Context.GenericTag<typeof gImplWrite>("File3")
-let File3Service = Context.make(File3Tag,gImplWrite)
-
-let mergedContext = Context.merge(File2Context)(File3Service)
-export let NeededContext = Context.get(mergedContext,FileTag)
-
-function test() {
-  if(10 == 10) {
-    if(11 == 11) {
-      console.log("true")
-    }
-  }
-}
